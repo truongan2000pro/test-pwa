@@ -16,6 +16,9 @@ export default defineConfig(({mode}) => {
         devOptions: {
           enabled: true
         },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        },
         manifest: {
           name: 'PWA Demo Application',
           short_name: 'PWADemo',

@@ -93,7 +93,7 @@ export default function App() {
             </div>
           )}
 
-          {(installPrompt || true) && (
+          {installPrompt && (
             <div className="p-4 bg-emerald-50 text-emerald-900 rounded-xl">
               <p className="font-medium">Install App</p>
               <p className="text-sm opacity-80 mb-3">Install this app on your device for quick access.</p>
