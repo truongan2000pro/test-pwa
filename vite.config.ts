@@ -27,18 +27,35 @@ export default defineConfig(({mode}) => {
           theme_color: '#ffffff',
           background_color: '#ffffff',
           display: 'standalone',
+          orientation: 'portrait',
           start_url: '/',
+          scope: '/',
+          categories: ['utilities', 'education'],
           prefer_related_applications: false,
           icons: [
             {
               src: 'pwa-192x192.svg',
               sizes: '192x192',
+              type: 'image/svg+xml',
+              purpose: 'any'
+            },
+            {
+              src: 'pwa-192x192.svg',
+              sizes: '192x192',
+              type: 'image/svg+xml',
+              purpose: 'maskable'
+            },
+            {
+              src: 'pwa-512x512.svg',
+              sizes: '512x512',
+              type: 'image/svg+xml',
               purpose: 'any'
             },
             {
               src: 'pwa-512x512.svg',
               sizes: '512x512',
-              purpose: 'any'
+              type: 'image/svg+xml',
+              purpose: 'maskable'
             }
           ],
           screenshots: [
@@ -46,13 +63,15 @@ export default defineConfig(({mode}) => {
               src: 'https://picsum.photos/400/822.jpg',
               sizes: '400x822',
               type: 'image/jpeg',
-              form_factor: 'narrow'
+              form_factor: 'narrow',
+              label: 'Mobile View'
             },
             {
               src: 'https://picsum.photos/1280/676.jpg',
               sizes: '1280x676',
               type: 'image/jpeg',
-              form_factor: 'wide'
+              form_factor: 'wide',
+              label: 'Desktop View'
             }
           ]
         }
