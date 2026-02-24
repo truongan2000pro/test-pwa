@@ -12,29 +12,45 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'pwa-192x192.svg', 'pwa-512x512.svg'],
         devOptions: {
           enabled: true
         },
         manifest: {
-          name: 'My PWA Demo',
+          name: 'PWA Demo Application',
           short_name: 'PWADemo',
           description: 'A simple PWA demo application',
-          theme_color: '#ffffff',
+          theme_color: '#4f46e5',
           background_color: '#ffffff',
           display: 'standalone',
+          orientation: 'portrait',
+          scope: '/',
           start_url: '/',
+          categories: ['utilities', 'education'],
           icons: [
             {
               src: 'pwa-192x192.svg',
               sizes: '192x192',
               type: 'image/svg+xml',
-              purpose: 'any maskable'
+              purpose: 'any'
+            },
+            {
+              src: 'pwa-192x192.svg',
+              sizes: '192x192',
+              type: 'image/svg+xml',
+              purpose: 'maskable'
             },
             {
               src: 'pwa-512x512.svg',
               sizes: '512x512',
               type: 'image/svg+xml',
-              purpose: 'any maskable'
+              purpose: 'any'
+            },
+            {
+              src: 'pwa-512x512.svg',
+              sizes: '512x512',
+              type: 'image/svg+xml',
+              purpose: 'maskable'
             }
           ]
         }
