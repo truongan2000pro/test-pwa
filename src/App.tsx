@@ -21,12 +21,39 @@ export default function App() {
   })
 
   const [installPrompt, setInstallPrompt] = useState<any>(null);
+  const [showManualInstall, setShowManualInstall] = useState(false);
+  const [browserType, setBrowserType] = useState<string>('');
 
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
+    // Detect if the app is already installed (standalone mode)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                         ('standalone' in window.navigator && (window.navigator as any).standalone);
+
+    if (!isStandalone) {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      const isIos = /iphone|ipad|ipod/.test(userAgent);
+      const isSamsung = /samsungbrowser/i.test(userAgent);
+      
+      if (isIos) {
+        setBrowserType('ios');
+        setShowManualInstall(true);
+      } else if (isSamsung) {
+        setBrowserType('samsung');
+        setShowManualInstall(true);
+      }
+    }
+
+    const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setInstallPrompt(e);
-    });
+      setShowManualInstall(false); // Hide manual install if native prompt is available
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
   }, []);
 
   const handleInstall = async () => {
@@ -80,6 +107,27 @@ export default function App() {
               >
                 Install Now
               </button>
+            </div>
+          )}
+
+          {showManualInstall && !installPrompt && (
+            <div className="p-4 bg-sky-50 text-sky-900 rounded-xl">
+              <p className="font-medium">Install App</p>
+              <p className="text-sm opacity-80 mt-1">
+                {browserType === 'ios' ? (
+                  <>
+                    To install this app on your iPhone/iPad:
+                    <br />1. Tap the <strong>Share</strong> icon at the bottom.
+                    <br />2. Scroll down and tap <strong>Add to Home Screen</strong>.
+                  </>
+                ) : (
+                  <>
+                    To install this app on Samsung Internet:
+                    <br />1. Tap the <strong>Menu</strong> (three lines) icon.
+                    <br />2. Tap <strong>Add/Install to Home Screen</strong>.
+                  </>
+                )}
+              </p>
             </div>
           )}
 
