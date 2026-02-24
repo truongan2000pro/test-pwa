@@ -20,20 +20,16 @@ export default defineConfig(({mode}) => {
           globPatterns: ['**/*.{js,css,html,ico,png,svg}']
         },
         manifest: {
+          id: 'pwa-demo-app',
           name: 'My PWA Demo',
           short_name: 'PWADemo',
           description: 'A simple PWA demo application',
           theme_color: '#ffffff',
           background_color: '#ffffff',
           display: 'standalone',
-          start_url: '/',
+          start_url: '/?source=pwa',
+          prefer_related_applications: false,
           icons: [
-            {
-              src: 'pwa-144x144.svg',
-              sizes: '144x144',
-              type: 'image/svg+xml',
-              purpose: 'any'
-            },
             {
               src: 'pwa-192x192.svg',
               sizes: '192x192',
@@ -44,7 +40,21 @@ export default defineConfig(({mode}) => {
               src: 'pwa-512x512.svg',
               sizes: '512x512',
               type: 'image/svg+xml',
-              purpose: 'any maskable'
+              purpose: 'maskable'
+            }
+          ],
+          screenshots: [
+            {
+              src: 'https://picsum.photos/400/822.jpg',
+              sizes: '400x822',
+              type: 'image/jpeg',
+              form_factor: 'narrow'
+            },
+            {
+              src: 'https://picsum.photos/1280/676.jpg',
+              sizes: '1280x676',
+              type: 'image/jpeg',
+              form_factor: 'wide'
             }
           ]
         }

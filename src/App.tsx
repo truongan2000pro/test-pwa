@@ -22,22 +22,13 @@ export default function App() {
 
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   const [showManualInstall, setShowManualInstall] = useState(false);
-  const [browserType, setBrowserType] = useState<string>('');
+  const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
     // Detect if the app is already installed (standalone mode)
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+    const checkStandalone = window.matchMedia('(display-mode: standalone)').matches || 
                          ('standalone' in window.navigator && (window.navigator as any).standalone);
-
-    if (!isStandalone) {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      const isIos = /iphone|ipad|ipod/.test(userAgent);
-      
-      if (isIos) {
-        setBrowserType('ios');
-        setShowManualInstall(true);
-      }
-    }
+    setIsStandalone(checkStandalone);
 
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
@@ -53,11 +44,15 @@ export default function App() {
   }, []);
 
   const handleInstall = async () => {
-    if (!installPrompt) return;
-    installPrompt.prompt();
-    const { outcome } = await installPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setInstallPrompt(null);
+    if (installPrompt) {
+      installPrompt.prompt();
+      const { outcome } = await installPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setInstallPrompt(null);
+      }
+    } else {
+      // Show manual install instructions if native prompt is not available
+      setShowManualInstall(true);
     }
   };
 
@@ -93,7 +88,7 @@ export default function App() {
             </div>
           )}
 
-          {installPrompt && (
+          {!isStandalone && (
             <div className="p-4 bg-emerald-50 text-emerald-900 rounded-xl">
               <p className="font-medium">Install App</p>
               <p className="text-sm opacity-80 mb-3">Install this app on your device for quick access.</p>
@@ -108,11 +103,12 @@ export default function App() {
 
           {showManualInstall && !installPrompt && (
             <div className="p-4 bg-sky-50 text-sky-900 rounded-xl">
-              <p className="font-medium">Install App</p>
+              <p className="font-medium">Manual Installation</p>
               <p className="text-sm opacity-80 mt-1">
-                To install this app on your iPhone/iPad:
-                <br />1. Tap the <strong>Share</strong> icon at the bottom.
-                <br />2. Scroll down and tap <strong>Add to Home Screen</strong>.
+                To install this app:
+                <br /><strong>iOS (Safari):</strong> Tap the Share icon at the bottom, then tap "Add to Home Screen".
+                <br /><strong>Android (Samsung Internet):</strong> Tap the Menu (three lines) icon, then tap "Add/Install to Home Screen".
+                <br /><strong>Other Browsers:</strong> Look for an "Install" or "Add to Home Screen" option in the browser menu.
               </p>
             </div>
           )}
