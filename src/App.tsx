@@ -1,10 +1,10 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
+
+// Pages
+import Home from './pages/Home';
+import Settings from './pages/Settings';
 
 export default function App() {
   const {
@@ -25,7 +25,6 @@ export default function App() {
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
-    // Detect if the app is already installed (standalone mode)
     const checkStandalone = window.matchMedia('(display-mode: standalone)').matches || 
                          ('standalone' in window.navigator && (window.navigator as any).standalone);
     setIsStandalone(checkStandalone);
@@ -33,7 +32,7 @@ export default function App() {
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setInstallPrompt(e);
-      setShowManualInstall(false); // Hide manual install if native prompt is available
+      setShowManualInstall(false);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -51,180 +50,81 @@ export default function App() {
         setInstallPrompt(null);
       }
     } else {
-      // Show manual install instructions if native prompt is not available
       setShowManualInstall(true);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8 font-sans flex items-center justify-center">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" className="w-6 h-6">
-              <path d="M96 48l48 96H48z" fill="#ffffff"/>
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-slate-900">PWA Demo</h1>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="p-4 bg-indigo-50 text-indigo-900 rounded-xl">
-            <p className="font-medium">Status</p>
-            <p className="text-sm opacity-80">
-              {offlineReady ? 'App ready to work offline' : 'App is online'}
-            </p>
-          </div>
-
-          {needRefresh && (
-            <div className="p-4 bg-amber-50 text-amber-900 rounded-xl">
-              <p className="font-medium">Update Available</p>
-              <button 
-                onClick={() => updateServiceWorker(true)}
-                className="mt-2 px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
-              >
-                Reload
-              </button>
+    <Router>
+      <div className="min-h-screen bg-slate-50 p-8 font-sans flex items-center justify-center">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" className="w-6 h-6">
+                <path d="M96 48l48 96H48z" fill="#ffffff"/>
+              </svg>
             </div>
-          )}
+            <h1 className="text-2xl font-bold text-slate-900">PWA Demo</h1>
+          </div>
+          
+          <div className="space-y-4">
+            {/* PWA Alerts */}
+            <div className="p-4 bg-indigo-50 text-indigo-900 rounded-xl">
+              <p className="font-medium text-sm">Status: {offlineReady ? 'Ready for offline' : 'Online'}</p>
+            </div>
 
-          {!isStandalone && (
-            <div className="p-4 bg-emerald-50 text-emerald-900 rounded-xl">
-              <p className="font-medium">Install App</p>
-              <p className="text-sm opacity-80 mb-3">Install this app on your device for quick access.</p>
+            {needRefresh && (
+              <div className="p-4 bg-amber-50 text-amber-900 rounded-xl">
+                <p className="font-medium text-sm">Update Available</p>
+                <button 
+                  onClick={() => updateServiceWorker(true)}
+                  className="mt-2 px-4 py-2 bg-amber-600 text-white rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
+                >
+                  Reload
+                </button>
+              </div>
+            )}
+
+            {!isStandalone && !installPrompt && !showManualInstall && (
               <button 
                 onClick={handleInstall}
-                className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+                className="w-full px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
               >
-                Install Now
+                Install App
               </button>
-            </div>
-          )}
+            )}
 
-          {showManualInstall && !installPrompt && (
-            <div className="p-4 bg-sky-50 text-sky-900 rounded-xl">
-              <p className="font-medium">Manual Installation</p>
-              <p className="text-sm opacity-80 mt-1">
-                To install this app:
-                <br /><strong>iOS (Safari):</strong> Tap the Share icon at the bottom, then tap "Add to Home Screen".
-                <br /><strong>Android (Samsung Internet):</strong> Tap the Menu (three lines) icon, then tap "Add/Install to Home Screen".
-                <br /><strong>Other Browsers:</strong> Look for an "Install" or "Add to Home Screen" option in the browser menu.
-              </p>
-            </div>
-          )}
+            {installPrompt && (
+              <div className="p-4 bg-emerald-50 text-emerald-900 rounded-xl">
+                <p className="font-medium">Install App</p>
+                <button 
+                  onClick={handleInstall}
+                  className="mt-2 px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
+                >
+                  Install Now
+                </button>
+              </div>
+            )}
 
-          <div className="pt-4 border-t border-slate-100">
-            <h2 className="text-lg font-semibold text-slate-800 mb-3">API Call Demo</h2>
-            <ApiDemo />
-          </div>
+            {showManualInstall && !installPrompt && (
+              <div className="p-4 bg-sky-50 text-sky-900 rounded-xl">
+                <p className="font-medium text-sm">Manual Installation Required</p>
+                <p className="text-xs opacity-80 mt-1">
+                  Use your browser menu's "Add to Home Screen" option.
+                </p>
+              </div>
+            )}
 
-          <div className="pt-4 border-t border-slate-100">
-            <h2 className="text-lg font-semibold text-slate-800 mb-3">Offline Notes</h2>
-            <Notes />
+            <hr className="border-slate-100 my-4" />
+
+            {/* Application Routes */}
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function ApiDemo() {
-  const [joke, setJoke] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchJoke = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      // Using a public API that doesn't require authentication
-      const response = await fetch('https://official-joke-api.appspot.com/random_joke');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      setJoke(`${data.setup} - ${data.punchline}`);
-    } catch (err) {
-      setError('Failed to fetch joke. You might be offline.');
-      console.error('Error fetching joke:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="space-y-3">
-      <button
-        onClick={fetchJoke}
-        disabled={loading}
-        className="w-full px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-200 transition-colors disabled:opacity-50"
-      >
-        {loading ? 'Fetching...' : 'Fetch Random Joke'}
-      </button>
-      
-      {error && (
-        <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
-      
-      {joke && !error && (
-        <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 italic">
-          "{joke}"
-        </div>
-      )}
-      <p className="text-xs text-slate-500">
-        PWAs can make API calls just like normal web apps. If you are offline, the fetch will fail unless the service worker is configured to cache API responses (which requires advanced Workbox configuration).
-      </p>
-    </div>
-  );
-}
-
-function Notes() {
-  const [notes, setNotes] = useState<string[]>(() => {
-    const saved = localStorage.getItem('pwa-notes');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [input, setInput] = useState('');
-
-  useEffect(() => {
-    localStorage.setItem('pwa-notes', JSON.stringify(notes));
-  }, [notes]);
-
-  const addNote = (e: FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-    setNotes([input, ...notes]);
-    setInput('');
-  };
-
-  return (
-    <div>
-      <form onSubmit={addNote} className="flex gap-2 mb-4">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a note..."
-          className="flex-1 px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-        />
-        <button 
-          type="submit"
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
-        >
-          Add
-        </button>
-      </form>
-      <ul className="space-y-2">
-        {notes.map((note, i) => (
-          <li key={i} className="p-3 bg-slate-50 rounded-lg text-slate-700 text-sm border border-slate-100">
-            {note}
-          </li>
-        ))}
-        {notes.length === 0 && (
-          <li className="text-slate-400 text-sm text-center py-4">No notes yet. Add one above!</li>
-        )}
-      </ul>
-    </div>
+    </Router>
   );
 }
