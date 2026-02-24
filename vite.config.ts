@@ -20,18 +20,21 @@ export default defineConfig(({mode}) => {
           short_name: 'PWADemo',
           description: 'A simple PWA demo application',
           theme_color: '#ffffff',
+          background_color: '#ffffff',
           display: 'standalone',
           start_url: '/',
           icons: [
             {
               src: 'pwa-192x192.svg',
               sizes: '192x192',
-              type: 'image/svg+xml'
+              type: 'image/svg+xml',
+              purpose: 'any maskable'
             },
             {
               src: 'pwa-512x512.svg',
               sizes: '512x512',
-              type: 'image/svg+xml'
+              type: 'image/svg+xml',
+              purpose: 'any maskable'
             }
           ]
         }

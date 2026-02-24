@@ -32,13 +32,9 @@ export default function App() {
     if (!isStandalone) {
       const userAgent = window.navigator.userAgent.toLowerCase();
       const isIos = /iphone|ipad|ipod/.test(userAgent);
-      const isSamsung = /samsungbrowser/i.test(userAgent);
       
       if (isIos) {
         setBrowserType('ios');
-        setShowManualInstall(true);
-      } else if (isSamsung) {
-        setBrowserType('samsung');
         setShowManualInstall(true);
       }
     }
@@ -114,19 +110,9 @@ export default function App() {
             <div className="p-4 bg-sky-50 text-sky-900 rounded-xl">
               <p className="font-medium">Install App</p>
               <p className="text-sm opacity-80 mt-1">
-                {browserType === 'ios' ? (
-                  <>
-                    To install this app on your iPhone/iPad:
-                    <br />1. Tap the <strong>Share</strong> icon at the bottom.
-                    <br />2. Scroll down and tap <strong>Add to Home Screen</strong>.
-                  </>
-                ) : (
-                  <>
-                    To install this app on Samsung Internet:
-                    <br />1. Tap the <strong>Menu</strong> (three lines) icon.
-                    <br />2. Tap <strong>Add/Install to Home Screen</strong>.
-                  </>
-                )}
+                To install this app on your iPhone/iPad:
+                <br />1. Tap the <strong>Share</strong> icon at the bottom.
+                <br />2. Scroll down and tap <strong>Add to Home Screen</strong>.
               </p>
             </div>
           )}
