@@ -27,20 +27,18 @@ export default defineConfig(({mode}) => {
           theme_color: '#ffffff',
           background_color: '#ffffff',
           display: 'standalone',
-          start_url: '/?source=pwa',
+          start_url: '/',
           prefer_related_applications: false,
           icons: [
             {
               src: 'pwa-192x192.svg',
               sizes: '192x192',
-              type: 'image/svg+xml',
               purpose: 'any'
             },
             {
               src: 'pwa-512x512.svg',
               sizes: '512x512',
-              type: 'image/svg+xml',
-              purpose: 'maskable'
+              purpose: 'any'
             }
           ],
           screenshots: [
