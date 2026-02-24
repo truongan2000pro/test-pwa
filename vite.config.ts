@@ -12,7 +12,7 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'pwa-192x192.svg', 'pwa-512x512.svg'],
+        includeAssets: ['pwa-144x144.svg', 'pwa-192x192.svg', 'pwa-512x512.svg'],
         devOptions: {
           enabled: true
         },
@@ -20,20 +20,17 @@ export default defineConfig(({mode}) => {
           globPatterns: ['**/*.{js,css,html,ico,png,svg}']
         },
         manifest: {
-          name: 'PWA Demo Application',
+          name: 'My PWA Demo',
           short_name: 'PWADemo',
           description: 'A simple PWA demo application',
-          theme_color: '#4f46e5',
+          theme_color: '#ffffff',
           background_color: '#ffffff',
           display: 'standalone',
-          orientation: 'portrait',
-          scope: '/',
           start_url: '/',
-          categories: ['utilities', 'education'],
           icons: [
             {
-              src: 'pwa-192x192.svg',
-              sizes: '192x192',
+              src: 'pwa-144x144.svg',
+              sizes: '144x144',
               type: 'image/svg+xml',
               purpose: 'any'
             },
@@ -41,19 +38,13 @@ export default defineConfig(({mode}) => {
               src: 'pwa-192x192.svg',
               sizes: '192x192',
               type: 'image/svg+xml',
-              purpose: 'maskable'
-            },
-            {
-              src: 'pwa-512x512.svg',
-              sizes: '512x512',
-              type: 'image/svg+xml',
               purpose: 'any'
             },
             {
               src: 'pwa-512x512.svg',
               sizes: '512x512',
               type: 'image/svg+xml',
-              purpose: 'maskable'
+              purpose: 'any maskable'
             }
           ]
         }
