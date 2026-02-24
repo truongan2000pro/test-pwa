@@ -1,0 +1,5 @@
+{
+  "name": "PWA Demo",
+  "description": "A simple Progressive Web App demo with offline note-taking capabilities.",
+  "requestFramePermissions": []
+}
